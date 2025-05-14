@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:zRdPOqnUefBaGyDeErPNkmZgYZKuYNGS@shuttle.proxy.rlwy.net:45284/railway'
+  # заміни на Railway URL
 db.init_app(app)
 
 class RegisterForm(FlaskForm):
@@ -16,10 +17,6 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email()])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=6)])
     submit = SubmitField('Register')
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -34,4 +31,6 @@ def register():
     return render_template('register.html', form=form)
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
