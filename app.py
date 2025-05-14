@@ -6,18 +6,16 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# DB setup
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
+# PostgreSQL URL прямо прописано:
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:zRdPOqnUefBaGyDeErPNkmZgYZKuYNGS@shuttle.proxy.rlwy.net:45284/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
 
-# Routes
 @app.route('/')
 def index():
     return redirect(url_for('login'))
